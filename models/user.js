@@ -1,6 +1,6 @@
 
 var mongoose = require("mongoose");
-const ut = require('../../share/user_title')
+// const ut = require('../../share/user_title')
 var Schema = mongoose.Schema;
 var ObjectId = Schema.Types.ObjectId;
 //当前地图
@@ -314,7 +314,7 @@ User.virtual('info').get(function () {
         arms_level: this.arms_level,
         arms_exp: this.arms_exp,
         map: this.map,
-        wear_title: this.wear_title > -1 ? ut[this.wear_title] : null,
+        wear_title: null,
         game_gold: this.game_gold,
         game_silver: this.game_silver,
         xy_num: this.xy_num,
@@ -363,7 +363,7 @@ User.virtual('rankInfo').get(function () {
         nickname: this.nickname,
         nickname_color: this.nickname_color,
         arms_level: this.arms_level,
-        wear_title: this.wear_title > -1 ? ut[this.wear_title] : null,
+        wear_title: null,
         level: this.level,
         hp: this.hp,
         hp_cap: this.hp_cap,
