@@ -1,6 +1,6 @@
 
 var mongoose = require("mongoose");
-const ut = require('../../share/user_title')
+// const ut = require('../../share/user_title')
 var Schema = mongoose.Schema;
 var ObjectId = Schema.Types.ObjectId;
 //当前地图
