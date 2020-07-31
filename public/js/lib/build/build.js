@@ -1623,7 +1623,7 @@ require.register("pomelonode-pomelo-jsclient-websocket/lib/pomelo-client.js", fu
         if (socket) {
           if (socket.disconnect) socket.disconnect();
           if (socket.close) socket.close();
-          if (socket.url.indexOf('3050') > -1 || socket.url.indexOf('3051') > -1 || socket.url.indexOf('3052') > -1) {
+          if (socket.url.indexOf('3050') > -1 || socket.url.indexOf('3051') > -1 || socket.url.indexOf('3052') > -1 || socket.url.indexOf('3053') > -1) {
               layer.msg('断线重连中...', { offset: '50%' });
               setTimeout(function () {
                   window.location.href = '/login?is_r=1';
