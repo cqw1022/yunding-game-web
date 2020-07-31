@@ -163,7 +163,7 @@ function addTeamFunc(tid) {
     });
 }
 //开始战斗
-function startBatFunc(type) {
+function startBatFunc(type, id) {
     let batId = $("#bat-screen-id-h").val()
     if (!batId && type != "tower") {
         layer.msg("请选择场景！", {
@@ -176,8 +176,10 @@ function startBatFunc(type) {
     if (type == "tower") {
         route = 'startCombatTower'
         obj['tower_num'] = $("#tower_num").val()
+    } else if (type == "star") {
+        route = 'startCombatStar'
+        obj['star_id'] = id;
     }
-    console.log('connector.teamHandler.${route}', `connector.teamHandler.${ route }`)
     pomelo.request(`connector.teamHandler.${route}`, {
         cbatid: batId,
         ...obj

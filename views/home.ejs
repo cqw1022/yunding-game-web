@@ -622,19 +622,15 @@
                 id = 'player-me'
                 randmo_x = data.type == "next" ? 1 : (map_body_width - 20)
                 man.x = randmo_x
-                if (data.myInfo.nickname == "GM" || player.nickname == "GM") {
-                    img = `background: url(http://ydxx.andiliba.cn/public/gm.png) no-repeat; background-size:30px 50px;height: 50px;width: 30px;`
-                    $('#map-body').append(`<div id="` + id + `" style='left:` + randmo_x + `px;${img}'   class="player"><span class='name-fix' style='color:red;'>${player.nickname}</span></div>`)
-                } else {
-                    $('#map-body').append(`<div id="` + id + `" style='left:` + randmo_x + `px;${img}'  class="player"><span class='name-fix'>${player.nickname}</span></div>`)
-                }
+                $('#map-body').append(`<div id="` + id + `" style='left:` + randmo_x + `px;${img}'  class="player"><span class='name-fix'>${player.nickname}</span></div>`)
             } else {
-                if (player.nickname == "GM") {
-                    img = `background: url(http://ydxx.andiliba.cn/public/gm.png) no-repeat; background-size:30px 50px;height: 50px;width: 30px;`
-                    $('#map-body').append(`<div id="` + id + `" style='left:` + randmo_x + `px;${img}'   class="player"><span class='name-fix' style='color:red;'>${player.nickname}</span></div>`)
-                } else {
-                    $('#map-body').append(`<div id="` + id + `" style='left:` + randmo_x + `px;${img}'  class="player"></div>`)
-                }
+                $('#map-body').append(`<div id="` + id + `" style='left:` + randmo_x + `px;${img}'  class="player"></div>`)
+            }
+        }
+        if (data.map.monter) {
+            for (const item of data.map.monter) {
+                let icon = `background: url(${item.img}) no-repeat; background-size:20px 30px;height: 30px;width: 20px;`
+                $('#map-body').append(`<a onclick="startBatFunc('star','${item.id}')"><div style='left:${item.left};${icon}'  class="player"><span class='name-fix'>${item.name}</span></div></a>`)
             }
         }
     }
