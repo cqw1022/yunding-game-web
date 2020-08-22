@@ -24,25 +24,31 @@
 </div>
 
 <script>
-    var selectRankFunc = function (type) {
-        let title = '等级'
-        if (type == 2) {
-            title = '兽宠'
-        } else if (type == 3) {
-            title = '神兵'
-        }
-        $("body").append(`<div id="rank-div-list">
-    <span style="color:black;">&nbsp;&nbsp;${title}排行榜</span>
-    <a onclick="closeRankDiv()" style=" float: right;font-size: 13px;margin-right: 10px;">关闭</a>
-    <br>
-    <div id="rank-list-info">
+    let soc = new WebSocket("ws://192.168.2.241:16002?token=1111")
+//     $.post("/api/by", {
+//         id: id
+//     },function(res){
+//         console.log(res)
+//     })
+//     var selectRankFunc = function (type) {
+//         let title = '等级'
+//         if (type == 2) {
+//             title = '兽宠'
+//         } else if (type == 3) {
+//             title = '神兵'
+//         }
+//         $("body").append(`<div id="rank-div-list">
+//     <span style="color:black;">&nbsp;&nbsp;${title}排行榜</span>
+//     <a onclick="closeRankDiv()" style=" float: right;font-size: 13px;margin-right: 10px;">关闭</a>
+//     <br>
+//     <div id="rank-list-info">
        
-    </div>
-</div>`)
-        $("#rank-div-list").fadeIn(1000)
-    }
-    var closeRankDiv = function () {
-        $("#rank-div-list").remove()
-    }
+//     </div>
+// </div>`)
+//         $("#rank-div-list").fadeIn(1000)
+//     }
+//     var closeRankDiv = function () {
+//         $("#rank-div-list").remove()
+//     }
 </script>
 <%- include ./layout/footer %>

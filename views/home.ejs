@@ -1489,6 +1489,59 @@
         })
 
     }
+    //晋升装备
+    var forgingEqFunc = function () {
+        if (!selectGoodsArr.length == 1) {
+            layer.msg("请选择一件大于50级装备", { offset: '50%' })
+            return;
+        }
+        pomelo.request("connector.userHandler.getMyUserEq", {
+            id: selectGoodsArr[0].id
+        }, function (res) {
+            if (!res.data) {
+                layer.msg("请选择已鉴定装备进阶", { offset: '50%' })
+                return
+            }
+            let data = equipmentOpenFunc(res.data)
+            layer.open({
+                type: 1,
+                title: `晋升装备`
+                , area: ['390px', '260px']
+                , offset: '20%' //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
+                , id: 'user-forgingeq-open' //防止重复弹出
+                , content: `<div class='layui-row' style='font-size:12px;'>
+                <div class='layui-col-sm6'>${data.tip}</div>
+                <div class='layui-col-sm6'>消耗:等级*100w经验、进阶灵石
+                    <br>
+                    提升:等级+10,属性稳定浮动提升
+                    <br>
+                    增益:可添灵石增加属性上限
+                    (上限波动=灵石/50w)
+                    <input id='forging-linshi' value='0' type='number'/>
+                </div>
+                </div>`
+                , btn: ['进阶', '取消']
+                , btnAlign: 'c' //按钮居中
+                , shade: 0.6 //不显示遮罩
+                , yes: function (e) {
+                    let ls = $('#forging-linshi').val()
+                    pomelo.request("connector.userHandler.forgingUserEq", {
+                        id: selectGoodsArr[0].id,
+                        ls: ls
+                    }, function (res) {
+                        if (res.code != 200) {
+                            layer.msg(res.msg, { offset: '50%' })
+                            return
+                        }
+                        appendLogsFunc(res.msg)
+                        layer.msg(res.msg, { offset: '50%' })
+                    })
+                    layer.closeAll();
+                }
+            });
+        })
+
+    }
     //初始我得宠物
     var initMyPetPageFunc = function () {
         pomelo.request("connector.userHandler.getMyPet", {
@@ -1585,11 +1638,11 @@
                         <span class="prompt-box">
                             `+ item.info + `
                             <br>
-                            触发【指定】&nbsp;&nbsp;基础伤害【` + item.real_damage + `】<a onclick="upLevelUserSkillFunc(1)">↑</a>
+                            触发【指定】&nbsp;&nbsp;基础伤害【` + item.real_damage + `】<a onclick="upLevelUserSkillFunc(1,'${item._id}')">↑</a>
                             <br>
-                            `+ item.hurt_field + `&nbsp;&nbsp;属性波动【` + item.min_hurt + `~` + item.max_hurt + `】<a onclick="upLevelUserSkillFunc(1)">↑</a>
+                            `+ item.hurt_field + `&nbsp;&nbsp;属性波动【` + item.min_hurt + `~` + item.max_hurt + `】<a onclick="upLevelUserSkillFunc(2,'${item._id}')">↑</a>
                             <br>
-                            作用单位【`+ item.unit + `】<a onclick="upLevelUserSkillFunc(1)">↑</a>
+                            作用单位【`+ item.unit + `】<a onclick="upLevelUserSkillFunc(3,'${item._id}')">↑</a>
                         </span>
                     </div>
                 </div>`
@@ -2190,7 +2243,7 @@
                 }
             }
             var playerGoods = res.data.playerSellUser;
-            var time = moment().subtract(2, 'days')
+            var time = moment().subtract(15, 'days')
             $('#player-sell-list').html("")
             for (const item of playerGoods) {
                 var divId = "div-" + item._id;
@@ -2812,8 +2865,14 @@
         })
     }
     //升级人物技能  
-    var upLevelUserSkillFunc = function (type) {
-        layer.msg("等待开放..", { offset: "50%" })
+    var upLevelUserSkillFunc = function (type, id) {
+        pomelo.request("connector.playerHandler.upLevelUserSkill", {
+            type,
+            id
+        }, function (res) {
+            layer.msg(res.msg, { offset: '50%' })
+        })
+        // layer.msg("等待开放..", { offset: "50%" })
     }
     //捐赠
     var donateFationFunds = function () {
@@ -2917,6 +2976,47 @@
         $("#fit-pet-b").html(ele)
 
         // layer.msg(res.msg, { offset: '50%' })
+    }
+    //炼兽
+    var upgradePetZZFunc = function () {
+        let ele = ""
+        let content_html = `<%- include ./page/zz_pet %>`
+        layer.msg(content_html, {
+            time: 120000,
+            btn: ['取消']
+            , btn2: function () {
+                layer.closeAll();
+            }
+        });
+        let ap = myPetList.find(s => s._id == selectPet)
+        if (!ap) {
+            layer.msg('请选择兽宠', { offset: '50%' })
+            return
+        }
+        $("#fit_growing_num").text(ap.growing_num.toFixed(2))
+        $("#fit_str_zz").text(ap.str_zz)
+        $("#fit_speed_zz").text(ap.speed_zz)
+        $("#fit_vit_zz").text(ap.vit_zz)
+        $("#fit_con_zz").text(ap.con_zz)
+        $("#fit_int_zz").text(ap.int_zz)
+        $("#fit_dodge_zz").text(ap.dodge_zz)
+        // layer.msg(res.msg, { offset: '50%' })
+    }
+    //提升
+    var userPetZzUpFunc = function (filed) {
+        if (!selectPet) {
+            layer.msg("请选择兽宠", { offset: '50%' })
+        }
+        pomelo.request("connector.playerHandler.userPetZzUp", {
+            type: filed,
+            id: selectPet
+        }, function (res) {
+            if (res.code == 200) {
+                appendLogsFunc(res.msg)
+            } else {
+                layer.msg(res.msg, { offset: '50%' })
+            }
+        })
     }
     //预览合宠
     var showFitPetFunc = function (type) {
