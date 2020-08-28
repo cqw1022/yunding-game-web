@@ -1,8 +1,8 @@
 {
     "db": "mongodb://127.0.0.1/hanhandb",
     "redisconfig": {
-        "host": "192.144.163.44",
-        "password": "GoRoadMe",
-        "database": 15
+        "host": "114.116.73.180",
+        "port": "6379",
+        "password": "GoRoadMe"
     }
 }
