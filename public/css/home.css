@@ -777,6 +777,13 @@ hr {
 .eq-info-tip span{
     font-size: 12px;
 }
+.boss-rank{
+    padding: 5px 10px;
+    font-size: 12px;
+}
+.boss-rank a{
+    color:#888;
+}
 .rank-fixd-div{
     background-color: aliceblue;
     position: fixed;
@@ -787,6 +794,10 @@ hr {
     font-size: 14px;
     cursor: pointer;
     line-height: 24px;
+}
+ .rank-r{
+    top: 40%;
+    color: #000;
 }
 .rank-fixd-div .prompt-box {
     border: solid 1px black;

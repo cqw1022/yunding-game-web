@@ -165,7 +165,8 @@ function addTeamFunc(tid) {
 //开始战斗
 function startBatFunc(type, id) {
     let batId = $("#bat-screen-id-h").val()
-    if (!batId && type != "tower") {
+    console.log(type)
+    if (!batId && type != "tower" && type != "world_boss") {
         layer.msg("请选择场景！", {
             offset: '50%'
         });
@@ -179,6 +180,9 @@ function startBatFunc(type, id) {
     } else if (type == "star") {
         route = 'startCombatStar'
         obj['star_id'] = id;
+    } else if (type == "world_boss") {
+        route = 'startCombatBoss'
+        obj['boss_id'] = id;
     }
     pomelo.request(`connector.teamHandler.${route}`, {
         cbatid: batId,

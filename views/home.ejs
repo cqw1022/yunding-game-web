@@ -1,5 +1,6 @@
 <%- include ./layout/header %>
-<link rel="stylesheet" href="http://ydxx.andiliba.cn/public/css/home.css">
+<link rel="stylesheet" href="/css/home.css">
+<!-- <link rel="stylesheet" href="http://ydxx.andiliba.cn/public/css/home.css"> -->
 <div class="layui-container main" id="main">
     <div class="layui-col-xs12 layui-col-md3 layui-col-sm3   layui-anim layui-anim-scale pdf">
         <div class="layui-row main-head">
@@ -302,6 +303,10 @@
         <br>
         <a onclick="selectRankFunc(3)">神兵排行</a>
     </span>
+</div>
+
+<div class="rank-fixd-div rank-r">
+    <a onclick="selectBossRankFunc(1)" style="color: brown;">魔灵伤害排行</a>
 </div>
 <%- include ./layout/footer %>
 <script src="http://ydxx.andiliba.cn/public/js/other_info.js" type="text/javascript"></script>
@@ -627,10 +632,10 @@
                 $('#map-body').append(`<div id="` + id + `" style='left:` + randmo_x + `px;${img}'  class="player"></div>`)
             }
         }
-        if (data.map.monter) {
-            for (const item of data.map.monter) {
+        if (data.map.monster) {
+            for (const item of data.map.monster) {
                 let icon = `background: url(${item.img}) no-repeat; background-size:20px 30px;height: 30px;width: 20px;`
-                $('#map-body').append(`<a onclick="startBatFunc('star','${item.id}')"><div style='left:${item.left};${icon}'  class="player"><span class='name-fix'>${item.name}</span></div></a>`)
+                $('#map-body').append(`<a onclick="startBatFunc('world_boss','${item.id}')"><div style='left:${item.left};${icon}'  class="player"><span class='name-fix'>${item.name}</span></div></a>`)
             }
         }
     }
@@ -2616,6 +2621,54 @@
             });
         })
     }
+    var selectBossRankFunc = function (type) {
+        pomelo.request("connector.playerHandler.getBossRank", {
+            type
+        }, function (res) {
+            if (res.code != 200) {
+                layer.msg(res.msg, { offset: '50%' })
+            }
+            setTimeout(() => {
+                selectBossRankFunc(type)
+            }, 30000)
+            let str = ""
+            let i = 1
+            let typeStr = "个人伤害"
+            if (type == 1) {
+                typeStr = "个人伤害"
+                for (const item of res.data) {
+                    let style = top_three_func(i)
+                    str += `<a onclick="showOtherInfoFunc('${item.nickname}')"><div class='layui-col-xs6'>
+                        <span style="${style}">${i}&nbsp;&nbsp;${item.nickname.substr(0, 4)}</span></div>
+                            <div class='layui-col-xs6'><span style="${style}"> ${~~(item.hurt / 1000)}k </span></div></a><br>`
+                    i++
+                }
+            }
+            let maxWinHeight = $(window).height()
+            let maxWinWidth = $(window).width()
+            let lessHeight = 0
+            if (maxWinHeight > 500) {
+                lessHeight = 870
+            } else {
+                lessHeight = (maxWinHeight * 0.8)
+            }
+            layer.open({
+                type: 1
+                , area: ['220px', '500px']
+                , offset: [ //为了演示，随机坐标
+                    ((maxWinHeight - lessHeight) < 20 ? 50 : (maxWinHeight - lessHeight))
+                    , ($(window).width() - (maxWinWidth - 20))]
+                , id: 'rank-layer-open' //防止重复弹出
+                , title: typeStr + '排行榜'
+                , content: `<div class='boss-rank' >${str}</div>`
+                , btnAlign: 'c' //按钮居中
+                , shade: 0 //不显示遮罩
+                , yes: function () {
+                    layer.closeAll();
+                }
+            });
+        })
+    }
     //初始聚仙阁楼页面
     var initMyFationPageFunc = function () {
         pomelo.request("connector.fationHandler.initFation", {
@@ -2961,7 +3014,7 @@
     var changeTurnIntoEggFunc = function () {
 
         let ele = ""
-        for (const item of myPetList) {
+        for (const item of myPetList.filter(s => s.type != 3)) {
             ele += `<option value='${item._id}'>${item.name}/${item.growing_num.toFixed(2)}成长</option>`
         }
         let content_html = `<%- include ./page/fit_pet %>`
