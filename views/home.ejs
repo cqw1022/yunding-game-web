@@ -635,7 +635,7 @@
         if (data.map.monster) {
             for (const item of data.map.monster) {
                 let icon = `background: url(${item.img}) no-repeat; background-size:20px 30px;height: 30px;width: 20px;`
-                $('#map-body').append(`<a onclick="startBatFunc('world_boss','${item.id}')"><div style='left:${item.left};${icon}'  class="player"><span class='name-fix'>${item.name}</span></div></a>`)
+                $('#map-body').append(`<a onclick="startBatFunc('world_boss','${item.id}')"><div style='left:${item.left};${icon + item.style}'  class="player"><span class='name-fix'>${item.name}</span></div></a>`)
             }
         }
     }
@@ -2628,9 +2628,9 @@
             if (res.code != 200) {
                 layer.msg(res.msg, { offset: '50%' })
             }
-            setTimeout(() => {
-                selectBossRankFunc(type)
-            }, 30000)
+            //     setTimeout(() => {
+            //         selectBossRankFunc(type)
+            //     }, 30000)
             let str = ""
             let i = 1
             let typeStr = "个人伤害"
