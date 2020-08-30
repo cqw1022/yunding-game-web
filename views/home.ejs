@@ -153,8 +153,11 @@
                 &nbsp;&nbsp; <i class="layui-icon">&#xe62e;</i class="layui-icon"><a onclick="switchMainBody()"
                     id="map-name">聚仙城</a>(<span id="postion-x">0</span>,1)
             </div>
-            <div class="layui-col-sm9" id="system-msg">
-
+            <div class="layui-col-sm8" id="system-msg">
+                &nbsp;
+            </div>
+            <div class="layui-col-sm1">
+                <a onclick="showWorldMapFunc()"><i class="layui-icon">&#xe609;</i></a>
             </div>
         </div>
         <div class="layui-row" id="map">
@@ -255,10 +258,16 @@
 
         <div class="tab" id="right-tab" style="text-align: left;">
             <div class="layui-row">
-                <div class="layui-col-xs12">
+                <div class="layui-col-xs6">
                     <div class="layui-form switch-auto-bat">
                         <input type="checkbox" style="margin-top: 0;" id="switchBatLog" checked="" name="bat-log"
                             lay-skin="switch" lay-filter="switchBatLog" lay-text="战斗日志|清爽日志">
+                    </div>
+                </div>
+                <div class="layui-col-xs6">
+                    <div class="layui-form switch-auto-bat">
+                        <input type="checkbox" style="margin-top: 0;" id="switchNetWork" name="work-log"
+                            lay-skin="switch" lay-filter="switchNetWork" lay-text="接收广播|关闭广播">
                     </div>
                 </div>
                 <!-- <div class="layui-col-xs3">
@@ -268,11 +277,12 @@
 
             <hr>
             <div id="logs" class="logs">
+                <p style="color: #000;">公告:<a style="color: #000;" href="/update" target="_blank">点击可查看最新内容文档</a></p>
             </div>
         </div>
         <div class="tab tab-d">
             <div class="layui-row" id="msg-body">
-
+                <p id="netWorkTip">当前广播为关闭状态，关闭后更稳定，但无法接受世界消息与系统推送</p>
             </div>
             <div class="layui-row">
                 <hr>
@@ -371,12 +381,25 @@
         //     }
         // });
         form.on('switch(switchBatLog)', function (data) {
-            layer.tips('温馨提示:开启后将显示战斗详情，关闭后，则显示掉落物品。', data.othis)
+            layer.tips('tip:开启后将显示战斗详情，关闭后，则显示掉落物品。', data.othis)
             if ($("#switchBatLog").is(':checked')) {
                 localStorage.setItem("switchBatLog", "1")
             } else {
                 localStorage.setItem("switchBatLog", "0")
             }
+        });
+        form.on('switch(switchNetWork)', function (data) {
+            layer.tips('tip:开启后将收到世界喊话与系统广播，关闭后，则无接收广播。', data.othis)
+            let status = $("#switchNetWork").is(':checked');
+            pomelo.request("connector.systemHandler.subSystemMsg", {
+                status: status ? 1 : 0
+            }, function (res) {
+                if (status) {
+                    $("#netWorkTip").text("广播接收已开启.");
+                } else {
+                    $("#netWorkTip").text('当前广播为关闭状态，关闭后更稳定，但无法接受世界消息与系统推送.')
+                }
+            })
         });
     });
     var closeLayer = function () {
@@ -780,6 +803,34 @@
         }, function (data) {
         });
     }
+    //查看世界地图
+    var showWorldMapFunc = function () {
+        pomelo.request('connector.playerHandler.allMap', {
+
+        }, function (data) {
+            let i = true;
+            let tr = ""
+            for (const item of data.maps) {
+                if (i) {
+                    tr += `<tr class='layui-table-click'  data-map='` + item.id + `'><td><a onclick="moveToMap(${item.id})">【` + item.name + `】</a></td></tr>`
+                    i = false;
+                } else {
+                    tr += `<tr class=''  data-map='` + item.id + `'><td><a onclick="moveToMap(${item.id})">【` + item.name + `】</a></td></tr>`
+                }
+            }
+            tr += `<tr class='` + (i ? "layui-table-click" : "") + `' data-map='-1'><td><a onclick="closeLayer()">关闭</a></td></tr>`
+            layer.msg(`
+            <div>点击选择&nbsp;&nbsp; <a style='color:aliceblue;' onclick="closeLayer()">关闭</a></td></div>
+            <table id='switch-map-tb' class="layui-table">
+                                    <tbody>
+                                      `+ tr + `
+                                    </tbody>
+                                </table>
+                                `, {
+                time: 20000,
+            });
+        })
+    }
     //切换地图
     var switchMap = function (type) {
         pomelo.request('connector.playerHandler.nextMap', {
@@ -795,13 +846,13 @@
             let tr = ""
             for (const item of data.maps) {
                 if (i) {
-                    tr += `<tr class='layui-table-click'  data-map='` + item.id + `'><td>【` + item.name + `】</td></tr>`
+                    tr += `<tr class='layui-table-click'  data-map='` + item.id + `'><td><a onclick="moveToMap(${item.id})">【` + item.name + `】</a></td></tr>`
                     i = false;
                 } else {
-                    tr += `<tr class=''  data-map='` + item.id + `'><td>【` + item.name + `】</td></tr>`
+                    tr += `<tr class=''  data-map='` + item.id + `'><td><a onclick="moveToMap(${item.id})">【` + item.name + `】</a></td></tr>`
                 }
             }
-            tr += `<tr class='` + (i ? "layui-table-click" : "") + `' data-map='-1'><td>关闭</td></tr>`
+            tr += `<tr class='` + (i ? "layui-table-click" : "") + `' data-map='-1'><td><a onclick="closeLayer()">关闭</a></td></tr>`
             layer.msg(`
             <div>上下控制，回车or空格选择</div>
             <table id='switch-map-tb' class="layui-table">
@@ -815,16 +866,17 @@
         });
     }
     //移动至新地图
-    var moveToMap = function () {
+    var moveToMap = function (m) {
         let mid = $($(".layui-table-click")[0]).data('map')
         if (!mid) {
             return;
         }
-        if (mid == -1) {
+        if (mid == -1 && !m) {
             closeLayer();
         } else {
             pomelo.request('connector.playerHandler.moveToNewMap', {
-                mid: mid
+                mid: m ? m : mid,
+                type: m ? 1 : 0
             }, function (data) {
                 if (data.code != 200) {
                     layer.msg(data.msg, { offset: '50%' })
@@ -922,6 +974,8 @@
                         p_color = "orchid;"
                     } else if (item.a_type == 4) {
                         p_color = "mediumseagreen;"
+                    } else if (item.hurt_type == 5) {
+                        p_color = "cornflowerblue;"
                     }
                     let resultStr = `<p><span style='color:red;'>` + item.a_name + `</span> 对 <span style='color:red;'>`
                         + item.b_name + `</span> &nbsp;使用<br>【<span style='color:${p_color}'>` + item.process + `</span>】` + trigger +
@@ -930,7 +984,12 @@
                         resultStr = `<p><span style='color:red;'>` + item.a_name + `</span> 对 <span style='color:red;'>`
                             + item.b_name + `</span> &nbsp;使用<br>【<span style='color:${p_color}'>` + item.process + `</span>】` + trigger +
                             `治疗<span style='color:green;'>` + hurtStr + `</span>气血` + (item.b_die ? "->死亡" : "") + `</p>`
-                    } else if (item.a_type == 3) {//封印
+                    } else if (item.hurt_type == 5) {//状态
+                        resultStr = `<p><span style='color:red;'>` + item.a_name + `</span> 对 <span style='color:red;'>`
+                            + item.b_name + `</span> &nbsp;使用<br>【<span style='color:${p_color}'>` + item.process + `</span>】` + trigger +
+                            `增益效果↑ <span style='color:cornflowerblue;'>` + hurtStr + `</span> 点</p>`
+                    }
+                    if (item.a_type == 3) {//封印
                         let addHurtStr = ''
                         for (const c of item.hurt) {
                             if (c > 0) {
@@ -1144,6 +1203,18 @@
                 let div = ` <div class="layui-col-xs6 player-block" data-id="` + item.id + `" data-name="` + item.name + `">
                         <div class="layui-progress">
                             <div class="layui-progress-bar" id="progress-hp-`+ item.id + `" style="background-color:lightcoral;width:` + hp_rate + `%;${color}">` + delHtmlTag(item.name) + `</div>
+                            <span class="prompt-box" style="color: #888;text-shadow: none;">
+                                <p>${item.name}</p>
+                                <p>气血:${~~item.hp_cap}</p>
+                                <p>物攻:${~~item.physical_damage}</p>
+                                <p>法攻:${~~item.magic_damage}</p>
+                                <p>治疗:${~~item.restore_damage}</p>
+                                <p>物防:${~~item.physical_defense}</p>
+                                <p>法防:${~~item.magic_defense}</p>
+                                <p>速度:${~~item.speed}</p>
+                                <p>物爆:${~~item.physical_crit}</p>
+                                <p>法爆:${~~item.magic_crit}</p>
+                            </span>
                         </div>
                         <div id='bat-status-`+ item.id + `'></div>
                     </div>`
@@ -1504,7 +1575,7 @@
             id: selectGoodsArr[0].id
         }, function (res) {
             if (!res.data) {
-                layer.msg("请选择已鉴定装备进阶", { offset: '50%' })
+                layer.msg("请选择已鉴定60级装备进阶", { offset: '50%' })
                 return
             }
             let data = equipmentOpenFunc(res.data)
@@ -1555,6 +1626,20 @@
                 layer.msg(data.msg, { offset: '50%' })
                 return;
             }
+        })
+    }
+    //兑换灵石
+    var byXsFunc = function () {
+        pomelo.request("connector.userHandler.byXs", {
+        }, function (data) {
+            if (data.code != 200) {
+                layer.msg(data.msg, { offset: '50%' })
+                return;
+            }
+            $("#user-ls").text(data.data.game_silver)
+            _add_ls_func(5000000)
+            // $("#user-xs").text(data.data.game_gold)
+            layer.msg(data.msg, { offset: '50%' })
         })
     }
     //挖宝图
@@ -2004,8 +2089,7 @@
                 $('#pet-tab-list').append(`
                 <tr class="pet-list-tr" id="pltr-`+ item._id + `" onclick="selectPetShowInfo('` + item._id + `')">
                         <td>`+ item.level + `</td>
-                        <td>`+ item.nickname + `</td>
-                        
+                        <td>`+ item.nickname + `&nbsp;&nbsp;<a onclick="playUserPetFunc('${item._id}',3)">${((item.bat_num && item.status) ? "主" : (item.status == 1 ? "副" : ""))}</a></td>
                 </tr>`)
                 // <td>`+ item.name + `</td>
             }
@@ -2088,7 +2172,7 @@
                         <span class='prompt-box'>可将兽宠幻化为宠物蛋(0级)<br>
                             普通兽宠2w灵石一次 成功率80%<br>
                             稀有兽宠10w灵石一次 成功率70%<br>
-                            其他2w仙石 成功率85%<br>
+                            其他8500仙石 成功率85%<br>
                             </span></span></td></tr>
                     `
             $("#pet-info").html(info)
@@ -2441,7 +2525,7 @@
                 layer.msg(data.msg, { offset: '50%' })
                 return;
             }
-            layer.msg((status == 1 ? "出战" : "休息") + "成功~", { offset: '50%' })
+            layer.msg("操作成功", { offset: '50%' })
         })
     }
     //升级宠物  type==1升级  type==2分配潜力 type==3放生
@@ -2557,13 +2641,13 @@
     var top_three_func = function (i) {
         style = ''
         if (i == 1) {
-            style = 'color:goldenrod;font-weight: 500;'
+            style = 'color:goldenrod;'
         } else if (i == 2) {
-            style = 'color:silver;font-weight: 500;'
+            style = 'color:silver;'
         } else if (i == 3) {
-            style = 'color:slategray;font-weight: 500;'
+            style = 'color:slategray;'
         } else {
-            style = 'color:unset;'
+            style = 'color: #333;'
         }
         return style
     }
@@ -2625,25 +2709,30 @@
         pomelo.request("connector.playerHandler.getBossRank", {
             type
         }, function (res) {
+            // console.log(res)
             if (res.code != 200) {
                 layer.msg(res.msg, { offset: '50%' })
             }
             //     setTimeout(() => {
             //         selectBossRankFunc(type)
             //     }, 30000)
-            let str = ""
+            let str = ''
             let i = 1
             let typeStr = "个人伤害"
             if (type == 1) {
                 typeStr = "个人伤害"
-                for (const item of res.data) {
+
+                for (const item of res.data.rank_list) {
                     let style = top_three_func(i)
                     str += `<a onclick="showOtherInfoFunc('${item.nickname}')"><div class='layui-col-xs6'>
-                        <span style="${style}">${i}&nbsp;&nbsp;${item.nickname.substr(0, 4)}</span></div>
-                            <div class='layui-col-xs6'><span style="${style}"> ${~~(item.hurt / 1000)}k </span></div></a><br>`
+                        <span style="font-size:12px;${style}">${i}&nbsp;&nbsp;${item.nickname.substr(0, 5)}</span></div>
+                            <div class='layui-col-xs6'><span style="font-size:12px;${style}"> ${~~(item.hurt / 1000)}k </span></div></a><br>`
                     i++
                 }
             }
+            str += `<p><a><div class='layui-col-xs6'>
+                        <span style="font-size:12px;">我的排名:&nbsp;&nbsp;${res.data.my.rank}</div>
+                            <div class='layui-col-xs6'><span style="font-size:12px;"> ${~~(res.data.my.hurt / 1000)}k </span></div></a></p>`
             let maxWinHeight = $(window).height()
             let maxWinWidth = $(window).width()
             let lessHeight = 0
@@ -2659,7 +2748,7 @@
                     ((maxWinHeight - lessHeight) < 20 ? 50 : (maxWinHeight - lessHeight))
                     , ($(window).width() - (maxWinWidth - 20))]
                 , id: 'rank-layer-open' //防止重复弹出
-                , title: typeStr + '排行榜'
+                , title: typeStr + '排行榜&nbsp;&nbsp;'
                 , content: `<div class='boss-rank' >${str}</div>`
                 , btnAlign: 'c' //按钮居中
                 , shade: 0 //不显示遮罩

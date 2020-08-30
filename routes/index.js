@@ -26,6 +26,9 @@ router.get('/exchange', function (req, res, next) {
 router.get('/test', function (req, res, next) {
   res.render('test');
 });
+router.get('/update', function (req, res, next) {
+  res.render('update');
+})
 
 router.post('/api/sendMailCode', index.sendMailCode)
 

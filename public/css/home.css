@@ -217,6 +217,25 @@ hr {
     font-size: 12px;
     white-space: nowrap;
 }
+.layui-progress  .prompt-box {
+    background-color: #fbfbfb;
+    border: solid 1px #d0d0d0;
+    text-align: left;
+    font-size: 12px;
+    width: 100%;
+    position: absolute;
+    left: 0px;
+    top: 39px;
+    display: none;
+    z-index: 333;
+    color: #888;
+    text-indent: 12px;
+}
+
+.layui-progress:hover .prompt-box {
+    display: inline-block;
+}
+
 .top-exp{
     height: 12px;
     border-radius:4px;
@@ -796,7 +815,7 @@ hr {
     line-height: 24px;
 }
  .rank-r{
-    top: 40%;
+    top: 30%;
     color: #000;
 }
 .rank-fixd-div .prompt-box {
