@@ -3103,7 +3103,7 @@
     var changeTurnIntoEggFunc = function () {
 
         let ele = ""
-        for (const item of myPetList.filter(s => s.type != 3)) {
+        for (const item of myPetList) {
             ele += `<option value='${item._id}'>${item.name}/${item.growing_num.toFixed(2)}成长</option>`
         }
         let content_html = `<%- include ./page/fit_pet %>`
