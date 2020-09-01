@@ -657,7 +657,7 @@
         }
         if (data.map.monster) {
             for (const item of data.map.monster) {
-                let icon = `background: url(${item.img}) no-repeat; background-size:20px 30px;height: 30px;width: 20px;`
+                let icon = `background: url(${item.img}) no-repeat; background-size:80px 100px;height: 100px;width: 80px;`
                 $('#map-body').append(`<a onclick="startBatFunc('world_boss','${item.id}')"><div style='left:${item.left};${icon + item.style}'  class="player"><span class='name-fix'>${item.name}</span></div></a>`)
             }
         }

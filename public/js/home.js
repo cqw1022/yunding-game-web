@@ -130,7 +130,9 @@ function selectBatIdFunc(cbatid, name) {
                 offset: '50%'
             });
             return;
-        } layer.msg(`更换场景【${name}】`, {
+        }
+        localStorage.removeItem("startBatType")
+        layer.msg(`更换场景【${name}】`, {
             offset: '50%'
         });
         $("#bat-screen-id").text(name)
@@ -165,7 +167,8 @@ function addTeamFunc(tid) {
 //开始战斗
 function startBatFunc(type, id) {
     let batId = $("#bat-screen-id-h").val()
-    console.log(type)
+    let old_type = localStorage.getItem("startBatType")
+    type = old_type ? old_type : type
     if (!batId && type != "tower" && type != "world_boss") {
         layer.msg("请选择场景！", {
             offset: '50%'
@@ -194,6 +197,7 @@ function startBatFunc(type, id) {
             });
             return;
         }
+        localStorage.setItem('startBatType', type)
     })
 }
 function openStartBatFor(type) {
