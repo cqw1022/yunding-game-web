@@ -3,6 +3,7 @@ const mongoose = require('mongoose')
 const User = mongoose.model("User")
 const UserGoods = mongoose.model("UserGoods")
 const UserPet = mongoose.model("UserPet")
+const Monster = mongoose.model("Monster")
 
 exports.getUserInfo = async (req, res) => {
     let uid = req.query.uid
@@ -28,4 +29,11 @@ exports.getUserInfo = async (req, res) => {
         }
     }
     return res.json({ code: 1, msg: "ok", data: { info: obj, userEqs, userPet } })
+}
+
+
+exports.getAllMonster = async (req, res) => {
+
+    let list = await Monster.find().populate("skill")
+    return res.json({ code: 1, msg: "ok", data: list })
 }
