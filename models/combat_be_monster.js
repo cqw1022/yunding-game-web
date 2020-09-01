@@ -20,7 +20,7 @@ var CombatBeMonster = new Schema({
         type: Number,
         default: 1  //1日  2星期  3月
     },
-    strict_level: {//严格等级限制， 0否1是
+    strict_level: {//严格等级限制， 0无等级限制跳转 1有等级限制挑战 2与玩家等级一致 3与玩家对等攻击
         type: Number,
         default: 0
     },
@@ -31,7 +31,7 @@ var CombatBeMonster = new Schema({
     //type为0或1则是暗雷场景   2以上计算队伍等级并平衡怪物属性
     type: {
         type: Number,
-        default: 0//0 普通  1 小副本 2 大副本 3boss 4特殊任务场景
+        default: 0//0 普通  1 小副本 2 大副本 3boss 4特殊任务场景  7星
     },
     min_level: {
         type: Number,
@@ -88,6 +88,10 @@ var CombatBeMonster = new Schema({
         type: Number,
         default: 0
     },
+    player_num: {
+        type: Number,
+        default: 5
+    },
     is_time: {//限时
         type: Number,
         default: 0
@@ -120,6 +124,7 @@ CombatBeMonster.virtual('combatBase').get(function () {
         repair_num: this.repair_num,
         health_num: this.health_num,
         must_goods: this.must_goods,
+        player_num: this.player_num,
         random_goods: this.random_goods
     }
 })
