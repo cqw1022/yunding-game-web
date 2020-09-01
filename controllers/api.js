@@ -8,7 +8,10 @@ const Monster = mongoose.model("Monster")
 exports.getUserInfo = async (req, res) => {
     let uid = req.query.uid
     let myInfo;
-    if (uid.length > 10) {
+    if (!uid) {
+        return res.json({ code: 0, msg: "uid error", data: null })
+    }
+    if (uid && uid.length > 10) {
         myInfo = await User.findById(uid)
     } else {
         myInfo = await User.findOne({ nickname: uid })
