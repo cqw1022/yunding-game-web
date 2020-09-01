@@ -4,6 +4,7 @@ const User = mongoose.model("User")
 const UserGoods = mongoose.model("UserGoods")
 const UserPet = mongoose.model("UserPet")
 const Monster = mongoose.model("Monster")
+const redis = require('../../game-server/app/helpers/redis')
 
 exports.getUserInfo = async (req, res) => {
     let uid = req.query.uid
@@ -36,7 +37,12 @@ exports.getUserInfo = async (req, res) => {
 
 
 exports.getAllMonster = async (req, res) => {
-
+    let key = "all_monster";
+    let old_json = await redis.get(key)
+    if (old_json) {
+        return res.json({ code: 1, msg: "ok", data: JSON.parse(old_json) })
+    }
     let list = await Monster.find().populate("skill")
+    await redis.setEx(key, JSON.stringify(list), (60 * 60 * 12))
     return res.json({ code: 1, msg: "ok", data: list })
 }
