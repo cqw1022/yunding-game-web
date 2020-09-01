@@ -3,3 +3,4 @@ package-lock.json
 /test
 /logs
 .idea
+back_js.ejs
