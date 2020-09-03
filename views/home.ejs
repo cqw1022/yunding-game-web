@@ -646,6 +646,7 @@
         man.x = randmo_x
         $('#map-body').append(`<div id="` + id + `" style='left:` + randmo_x + `px;${img}'  class="player"><span class='name-fix'>${data.myInfo.nickname}</span></div>`)
         for (let i = 0; i < max_p - 1; i++) {
+            randmo_x = parseInt(Math.random() * 400);
             // const player = data.players[i];
             // otherPlayers.push({
             //     x: randmo_x,
