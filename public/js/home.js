@@ -227,7 +227,11 @@ var upPlayerLevelFunc = function () {
             });
             return;
         }
-        $("#logs").append(`<p style='color:red;'>恭喜你提升境界至【` + data.data.cond.nextLevelName + `】,实力更强了~</p>`)
+        if (data.data.is_rob) {
+            $("#logs").append(`<p style='color:red;'>使用【破障丹】完美避开雷劫完成突破</p>`)
+            $("#logs").append(`<p style='color:red;'>巩固实力，成功凝聚 ${data.data.add_exp} 点修为</p>`)
+        }
+        $("#logs").append(`<p style='color:red;'>恭喜你提升境界至【` + data.data.cond.nextLevelName + `】,实力更强了</p>`)
         initPageUserInfo();
         reloadUserTaskFunc();
     })

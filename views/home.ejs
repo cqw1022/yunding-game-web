@@ -264,12 +264,12 @@
                             lay-skin="switch" lay-filter="switchBatLog" lay-text="战斗日志|清爽日志">
                     </div>
                 </div>
-                <div class="layui-col-xs6">
+                <!-- <div class="layui-col-xs6">
                     <div class="layui-form switch-auto-bat">
                         <input type="checkbox" style="margin-top: 0;" id="switchNetWork" name="work-log"
                             lay-skin="switch" lay-filter="switchNetWork" lay-text="接收广播|关闭广播">
                     </div>
-                </div>
+                </div> -->
                 <!-- <div class="layui-col-xs3">
                     <a style="color: black;font-size: 12px;font-weight: 400;">其他日志</a>
                 </div> -->
@@ -282,7 +282,7 @@
         </div>
         <div class="tab tab-d">
             <div class="layui-row" id="msg-body">
-                <p id="netWorkTip">当前广播为关闭状态，关闭后更稳定，但无法接受世界消息与系统推送</p>
+                <!-- <p id="netWorkTip">当前广播为关闭状态，关闭后更稳定，但无法接受世界消息与系统推送</p> -->
             </div>
             <div class="layui-row">
                 <hr>
@@ -388,19 +388,19 @@
                 localStorage.setItem("switchBatLog", "0")
             }
         });
-        form.on('switch(switchNetWork)', function (data) {
-            layer.tips('tip:开启后将收到世界喊话与系统广播，关闭后，则无接收广播。', data.othis)
-            let status = $("#switchNetWork").is(':checked');
-            pomelo.request("connector.systemHandler.subSystemMsg", {
-                status: status ? 1 : 0
-            }, function (res) {
-                if (status) {
-                    $("#netWorkTip").text("广播接收已开启.");
-                } else {
-                    $("#netWorkTip").text('当前广播为关闭状态，关闭后更稳定，但无法接受世界消息与系统推送.')
-                }
-            })
-        });
+        // form.on('switch(switchNetWork)', function (data) {
+        //     layer.tips('tip:开启后将收到世界喊话与系统广播，关闭后，则无接收广播。', data.othis)
+        //     let status = $("#switchNetWork").is(':checked');
+        //     pomelo.request("connector.systemHandler.subSystemMsg", {
+        //         status: status ? 1 : 0
+        //     }, function (res) {
+        //         if (status) {
+        //             $("#netWorkTip").text("广播接收已开启.");
+        //         } else {
+        //             $("#netWorkTip").text('当前广播为关闭状态，关闭后更稳定，但无法接受世界消息与系统推送.')
+        //         }
+        //     })
+        // });
     });
     var closeLayer = function () {
         $(".layui-layer-content").remove();
@@ -1024,7 +1024,9 @@
                     }
                     let hp_w = (item.hp / item.hp_cap * 100).toFixed(0)
                     $('#progress-hp-' + item.id).animate({ width: hp_w + "%" })
-
+                    if (!item.is_ys) {
+                        $("#progress-hp-" + item.id).css("opacity", "1")
+                    }
                     if (item._id == user_id) {
                         let mp_w = (item.mp / item.mp_cap * 100).toFixed(0)
                         let fn_w = (item.fn / 150 * 100).toFixed(0)
@@ -1202,7 +1204,7 @@
                 }
                 let div = ` <div class="layui-col-xs6 player-block" data-id="` + item.id + `" data-name="` + item.name + `">
                         <div class="layui-progress">
-                            <div class="layui-progress-bar" id="progress-hp-`+ item.id + `" style="background-color:lightcoral;width:` + hp_rate + `%;${color}">` + delHtmlTag(item.name) + `</div>
+                            <div class="layui-progress-bar" id="progress-hp-`+ item.id + `" style="${item.is_ys ? "opacity: 0.6;" : ""}background-color:lightcoral;width:` + hp_rate + `%;${color}">` + delHtmlTag(item.name) + `</div>
                             <span class="prompt-box" style="color: #888;text-shadow: none;">
                                 <p>${item.name}</p>
                                 <p>气血:${~~item.hp_cap}</p>
