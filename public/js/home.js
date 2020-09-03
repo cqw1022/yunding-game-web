@@ -168,7 +168,7 @@ function addTeamFunc(tid) {
 function startBatFunc(type, id) {
     let batId = $("#bat-screen-id-h").val()
     let old_type = localStorage.getItem("startBatType")
-    type = old_type ? old_type : type
+    type = type ? type : old_type
     if (!batId && type != "tower" && type != "world_boss") {
         layer.msg("请选择场景！", {
             offset: '50%'

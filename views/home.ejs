@@ -636,24 +636,31 @@
         $("#map-name").text(data.map.name)
         $("#postion-x").text(1)
         let map_body_width = $("#map-body").width()
-        let max_p = data.players.length
-        for (let i = 0; i < max_p; i++) {
-            let img = `background: url(http://ydxx.andiliba.cn/public/0.png) no-repeat; background-size:20px 30px;height: 30px;width: 20px;`
-            const player = data.players[i];
-            let randmo_x = parseInt(Math.random() * 400);
-            otherPlayers.push({
-                x: randmo_x,
-                nickname: player.nickname
-            })
-            let id = player._id
-            if (player._id == data.myInfo._id) {
-                id = 'player-me'
-                randmo_x = data.type == "next" ? 1 : (map_body_width - 20)
-                man.x = randmo_x
-                $('#map-body').append(`<div id="` + id + `" style='left:` + randmo_x + `px;${img}'  class="player"><span class='name-fix'>${player.nickname}</span></div>`)
-            } else {
-                $('#map-body').append(`<div id="` + id + `" style='left:` + randmo_x + `px;${img}'  class="player"></div>`)
-            }
+        // let max_p = data.players.length
+        let max_p = data.p_count
+        let img = `background: url(http://ydxx.andiliba.cn/public/0.png) no-repeat; background-size:20px 30px;height: 30px;width: 20px;`
+
+        let id = 'player-me'
+        let randmo_x = parseInt(Math.random() * 400);
+        randmo_x = data.type == "next" ? 1 : (map_body_width - 20)
+        man.x = randmo_x
+        $('#map-body').append(`<div id="` + id + `" style='left:` + randmo_x + `px;${img}'  class="player"><span class='name-fix'>${data.myInfo.nickname}</span></div>`)
+        for (let i = 0; i < max_p - 1; i++) {
+            // const player = data.players[i];
+            // otherPlayers.push({
+            //     x: randmo_x,
+            //     nickname: player.nickname
+            // })
+            // let id = player._id
+            // if (player._id == data.myInfo._id) {
+            //     id = 'player-me'
+            //     randmo_x = data.type == "next" ? 1 : (map_body_width - 20)
+            //     man.x = randmo_x
+            //     $('#map-body').append(`<div id="` + id + `" style='left:` + randmo_x + `px;${img}'  class="player"><span class='name-fix'>${player.nickname}</span></div>`)
+            // } else {
+            $('#map-body').append(`<div id="" style='left:` + randmo_x + `px;${img}'  class="player"></div>`)
+            // $('#map-body').append(`<div id="` + id + `" style='left:` + randmo_x + `px;${img}'  class="player"></div>`)
+            // }
         }
         if (data.map.monster) {
             for (const item of data.map.monster) {
@@ -1639,7 +1646,7 @@
                 return;
             }
             $("#user-ls").text(data.data.game_silver)
-            _add_ls_func(5000000)
+            _add_ls_func(10000000)
             // $("#user-xs").text(data.data.game_gold)
             layer.msg(data.msg, { offset: '50%' })
         })
