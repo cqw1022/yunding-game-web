@@ -7,6 +7,7 @@ const User = mongoose.model('User');
 const UserGoods = mongoose.model('UserGoods');
 var svgCaptcha = require('svg-captcha');
 const Volume = mongoose.model("Volume")
+
 exports.sendMailCode = async (req, res) => {
     try {
         let ipStr = req.headers['X-Real-IP'] || req.headers['x-forwarded-for'];

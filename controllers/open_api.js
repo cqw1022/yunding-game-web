@@ -4,9 +4,13 @@ const User = mongoose.model("User")
 const UserGoods = mongoose.model("UserGoods")
 const UserPet = mongoose.model("UserPet")
 const Monster = mongoose.model("Monster")
+const Goods = mongoose.model("Goods")
 const CombatBeMonster = mongoose.model("CombatBeMonster")
 const redis = require('../../game-server/app/helpers/redis')
-
+// exports.getGoods = async (req, res) => {
+//     let list = await Goods.find({}, { name: 1, info: 1, _id: 1 })
+//     return res.json(list)
+// }
 exports.getUserInfo = async (req, res) => {
     let uid = req.query.uid
     let myInfo;
