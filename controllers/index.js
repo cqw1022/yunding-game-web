@@ -41,6 +41,7 @@ exports.sendMailCode = async (req, res) => {
         let data = await ucode.save();
         return res.json({ code: 200, msg: "success", data: code.data })
     } catch (error) {
+        console.log("sendsms============>" + error)
         return res.json({ code: 500, msg: "请联系作者，错误:" + error, data: null })
     }
 }

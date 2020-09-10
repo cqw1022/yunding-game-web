@@ -4,7 +4,7 @@ const index = require('../controllers/index')
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
-  res.render('home', { title: 'Express' });
+  res.render('home');
 });
 
 router.get('/login', function (req, res, next) {
