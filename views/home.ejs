@@ -2017,10 +2017,16 @@
             eq_type = `${eq.level > 0 ? ("+" + eq.level) : ""}腰`
         } else if (eq.type == 6) {
             eq_type = `${eq.level > 0 ? ("+" + eq.level) : ""}靴`
+        } else if (eq.type == 7) {
+            eq_type = `${eq.level > 0 ? ("+" + eq.level) : ""}羽`
         }
         let skill_icon = ``
         if (eq.skill) {
-            tip += `<span style='color:orchid;'>&nbsp;特技:${eq.skill.name}</span><br>`
+            if (eq.skill.type == 701) {
+                tip += `<span style='color:cadetblue;'>&nbsp;附加:${eq.skill.name}</span><br>`
+            } else {
+                tip += `<span style='color:orchid;'>&nbsp;特技:${eq.skill.name}</span><br>`
+            }
             if (eq.skill.consume_num < 75) {
                 eq_type += "<span style='color:orchid;'>◐</span>"
                 skill_icon = "<span style='color:orchid;'>◐</span>"
