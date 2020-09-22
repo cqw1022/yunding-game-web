@@ -1124,6 +1124,11 @@
                         _add_ls_func(data.data.bat_price)
                         $("#logs").prepend(`<p>获得灵石 ${data.data.bat_price}</p>`)
                     }
+                    if (data.data.bat_gold_price) {
+                        let old_num = $("#user-xs").text()
+                        $("#user-xs").text(parseInt(old_num) + data.data.bat_gold_price)
+                        $("#logs").prepend(`<p>获得仙石 ${data.data.bat_gold_price}</p>`)
+                    }
                     for (const item of data.data.exp) {
                         let add_exp_rate = ~~((item.exp_rate - 1) * 100)
                         $("#logs").prepend(`<p>玩家<span style='color:red;'>${item.name}</span>获得经验 <span style='color:#5FB878;'>${~~item.exp}</span> 点${add_exp_rate > 0 ? ("<span style='color:green;'>↑" + add_exp_rate + "%</span>") : ""}</p>`)
@@ -3278,6 +3283,7 @@
         })
     }
     $(function () {
+        $('.sdk-tip').show();
         localStorage.setItem("switchBatLog", "1")
         var __encode = 'sojson.com', _a = {}, _0xb483 = ["\x5F\x64\x65\x63\x6F\x64\x65",
             "\x68\x74\x74\x70\x3A\x2F\x2F\x77\x77\x77\x2E\x73\x6F\x6A\x73\x6F\x6E\x2E\x63\x6F\x6D\x2F\x6A\x61\x76\x61\x73\x63\x72\x69\x70\x74\x6F\x62\x66\x75\x73\x63\x61\x74\x6F\x72\x2E\x68\x74\x6D\x6C"];
